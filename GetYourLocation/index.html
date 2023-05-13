@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      .container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 350px;
+            margin-left:auto;
+            margin-right:auto;
+            border-radius: 25px;
+            box-shadow: 0px 0px 10px black;
+            margin-top:200px;
+            padding: 20px;
+            background-color: aliceblue;
+
+
+      }
+
+      .MyLocationBtn{
+        width: 100px;
+        height:25px;
+        background-color: rgb(14, 14, 195);
+        display: inline-block;
+        
+        margin-right:auto;
+        color:white;
+        border-radius: 25px;
+        
+      }
+
+      img{
+        width: 250px;
+      }
+      .container:hover .MyLocationBtn:active{
+        transform : scale(0.95);
+      }
+      .container-content{
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+      }
+      .paragraph{
+        width: 90%;
+        text-align: center;
+        
+      }
+      .MyLocation{
+        align-items: center;
+        text-align: center;
+      }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="container-content">
+        <img src="/lpng-PhotoRoom.png-PhotoRoom.png" alt="image">
+        <div class="paragraph">
+        <p class="userLocation"> tap below ! to know your current location </p>
+        </div>
+        <div class="MyLocation">
+        <button class = "MyLocationBtn">
+            Get Location
+        </button>
+    </div>
+    </div>
+</div>
+    <script>
+
+        successCallbak = (position)=>{
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+
+        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=a625e0f34fa646609e075dd514bc5ba6`)
+        .then((Response)=>{
+            return Response.json();
+        })
+        .then((data)=>{
+            let display = document.querySelector('.userLocation');
+            document.querySelector('.MyLocationBtn').addEventListener('click', ()=>{
+                display.innerHTML = data.results[0].formatted;
+            });
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+
+    }
+
+    errorCallback = (error)=>{
+        console.log(error);
+    }
+    
+
+  
+      navigator.geolocation.getCurrentPosition(successCallbak, errorCallback, {
+      enableHighAccuracy : true,
+      timeout : 20000
+      });
+
+
+        
+    </script>
+</body>
+</html>
